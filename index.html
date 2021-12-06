@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Extraterrestrial Investigation</title>
+        <meta name="author" content="April LaRosa">
+        <meta name="robots" content="noindex, nofollow">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <link rel="icon" href="images/alien_marker.png">
+        <link rel="stylesheet" href="css/map.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    </head>
+    <body>
+        <h1>Extraterrestrial Investigation</h1>
+        <div id="mapid"></div>
+
+        <script type="text/javascript" src="data/us-states.js"></script>
+        <script>
+    /**
+     * used Leaflet Tutorials: Quick Start Guide, Markers with Custom Icons, Interactive Choropleth Map, Layer Groups and Layers Control;
+     * used stackOverflow post to set up Leaflet Routing Machine (https://stackoverflow.com/questions/36421694/making-polyline-snap-to-roads-in-leaflet)
+     **/
+
+    //code to add roadtrip stops to map
+            var alienIcon = L.icon({
+                iconUrl: 'images/alien_marker.png',
+                iconSize: [35, 35]
+            });
+            var roadtrip = L.layerGroup();
+
+            var museum = L.marker([33.39500914578225, -104.5170213225687], {icon: alienIcon}).addTo(roadtrip);
+            museum.bindPopup("<span class='title'>International UFO Museum and Research Center</span><p>The International UFO Museum & Research Center at Roswell, New Mexico was organized to inform the public about what has come to be known as <q>The Roswell Incident.</q> The Museum is a non-profit 501(c)(3) corporation dedicated to the collection and " +
+            "preservation of materials and information in written, audio and visual formats that are related to the 1947 Roswell Incident and other unexplained phenomena related to UFO research. The Museum endeavors to be the leading information source in history, science and research about UFO events worldwide.</p><img src='images/museum.jpg' alt='International UFO Museum and Research Center'>");
+            //description from roswellufomuseum.com, image from Group Tour magazine
+
+            var watchtower = L.marker([37.78875924839999, -105.88663274563923], {icon: alienIcon}).addTo(roadtrip);
+            watchtower.bindPopup("<span class='title'>UFO Watchtower</span><p>Arguably Colorado's most unique roadside attraction, the UFO Watchtower invites extraterrestrial seekers and curious minds alike to the watchtower for a chance to spot an alien or UFO for themselves. Allegedly, this location has hosted " +
+            "numerous UFO sightings over the years, which could in part be possible thanks to Alamosa's vast and unfiltered view of the night's sky.</p><img src='images/watchtower.jpg' alt='UFO Watchtower'>");
+            //description from alamosa.org, image from Newsweek
+
+            var valley = L.marker([37.725881819687636, -105.85091946716832], {icon: alienIcon}).addTo(roadtrip);
+            valley.bindPopup("<span class='title'>San Luis Valley</span><p>Whether you’re an avid believer in visitors from outer space or a staunch skeptic, it doesn’t change the fact that there’s been a lot of weird things going on in the San Luis Valley for decades. It’s a region that stretches from northern New Mexico deep into south central Colorado. " +
+            "It’s the highest alpine valley on the planet, and, depending on who you ask, a prime spot for witnessing paranormal activity, such as UFO sightings, mystical portals, and other strange occurrences.</p><img src='images/valley.jpg' alt='San Luis Valley'>");
+            //description and image from Uncover Colorado
+
+            var sign = L.marker([37.54378490666505, -115.19901375359004], {icon: alienIcon}).addTo(roadtrip);
+            sign.bindPopup("<span class='title'>Extraterrestrial Highway Sign</span><p>State highway 375 was declared the <q>Extraterrestrial Highway</q> in 1996 by the state's Department of Transportation and dedicated in an official ceremony by Governor Bob Miller. Rt. 375 is the closest the curious " +
+            "public can get to the government's not-so-super-secret Area 51, with its constant UFO traffic and alien visitations.</p><img src='images/sign.jpg' alt='Extraterrestrial Highway Sign'>");
+            //description from Roadside America, image from Newsweek
+
+            var mailbox = L.marker([37.45718519617338, -115.4820065879781], {icon: alienIcon}).addTo(roadtrip);
+            mailbox.bindPopup("<span class='title'>The Black Mailbox</span><p>In operation for over 20 years, this restaurant on the way to Area 51 and other Nevada locations known to attract E.T’s embraces the area’s lore to the extreme and has all of the alien paraphernalia one could hope for." +
+            " Stop by for a meal or a souvenir and the friendly staff will also fill you in on the best spots for watching the skies!</p><img src='images/mailbox.jpg' alt='The Black Mailbox'>");
+            //description from atlasobscura.com, image from Travel Nevada
+            
+            var inn = L.marker([37.64718788674813, -115.74205563272898], {icon: alienIcon}).addTo(roadtrip);
+            inn.bindPopup("<span class='title'>Little A'Le'Inn</span><p>Thanks to its proximity to Area 51, the legendary Black Mailbox just may be your chance. Situated along Nevada State Route 375—or the Extraterrestrial Highway—The Black Mailbox has been a decades-long meeting place for the " +
+            "extraterrestrial-obsessed who gather near the mailbox to try their luck at eyeing a UFO, or better yet, communicating with life beyond.</p><img src='images/inn.jpg' alt='Little Aleinn'>");
+            //description and image from Travel Nevada
+
+            var ranch = L.marker([40.2584767309911, -109.88742249158719], {icon: alienIcon}).addTo(roadtrip);
+            ranch.bindPopup("<span class='title'>Skinwalker Ranch</span><p>Skinwalker Ranch, also known as Sherman Ranch, is a property located on approximately 512 acres (207 ha) southeast of Ballard, Utah, that is reputed to be the site of paranormal and UFO-related activities. Its name is " +
+            "taken from the skin-walker of Navajo legend concerning vengeful shamans.</p><img src='images/ranch.jpg' alt='Skinwalker Ranch'>");
+            //description from Wikipedia, image from history.com
+
+            var lights = L.marker([30.27526676537764, -103.88236133607465], {icon: alienIcon}).addTo(roadtrip);
+            lights.bindPopup("<span class='title'>Marfa Lights Viewing Area</span><p>The Marfa Lights—or Marfa Mystery Lights, as some call them—are a top reason to visit Marfa, drawing visitors from around the globe for a chance to see these unexplained phenomena. Accounts of the strange spectacle just east of " +
+            "Marfa began during the 19th century and continue to this day.</p><img src='images/lights.jpg' alt='Marfa Lights'>");
+            //description from visitmarfa.com, image from Texas Co-op Power
+
+            var grave = L.marker([33.053762967383896, -97.49950576900956], {icon: alienIcon}).addTo(roadtrip);
+            grave.bindPopup("<span class='title'>Aurora's Alien Grave</span><p>According to a story run in the April 19, 1897, edition of the Dallas Morning News a “mystery airship,” as UFOs were known in those days, came sailing out of the sky, smashing through a windmill belonging to Judge J.S. " +
+            "Proctor, before finally crashing into the ground. The debris also destroyed the good judge’s flower garden. Unfortunately the pilot was also killed in the collision, but locals were able to drag what was described as a “petite” and “Martian” body from the wreckage. The body " +
+            "was supposedly buried under a tree branch in the Aurora cemetery, observing good Christian rites.</p><img src='images/grave.jpg' alt='Alien Grave'>");
+            //description from atlasobscura.com, image from Texas Escapes
+
+    //add ufo sightings data
+
+            var sightings = L.geoJson(statesData, {style: style, onEachFeature: onEachFeature});
+
+            //sets color for state based on no. sightings
+            function getColor(num) {
+                return num > 5000  ? '#006837' :
+                    num > 3000  ? '#238443' :
+                    num > 2000  ? '#41ab5d' :
+                    num > 1000  ? '#78c679' :
+                    num > 750   ? '#addd8e' :
+                    num > 500   ? '#d9f0a3' :
+                                '#f7fcb9';
+            }
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.sightings),
+                    weight: 2,
+                    opacity: 1,
+                    color: '#595959',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+            function highlightFeature(e) {
+                var layer = e.target;
+
+                layer.setStyle({
+                    weight: 3,
+                    color: 'white',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                });
+
+                if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                    layer.bringToFront();
+                }
+
+                info.update(layer.feature.properties);
+            }
+
+            function resetHighlight(e) {
+                sightings.resetStyle(e.target);
+                info.update();
+            }
+
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                });
+            }
+
+    //add overlay
+            var overlayMaps = {
+                "UFO Sightings": sightings,
+                "Roadtrip": roadtrip
+            }
+
+    //set up map
+            var mymap = L.map('mapid', {layers: [sightings, roadtrip], tap: false}).setView([37.8, -96], 4);
+
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/dark-v10',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoiYWxhcm9zYSIsImEiOiJja3V2dm12OWk0dXN6Mm90NHhiNzcyd2xvIn0.25UcfkOSnN2flxBAVpGEPw'
+            }).addTo(mymap);
+
+            L.control.layers(null, overlayMaps, {position: "bottomleft"}).addTo(mymap);
+
+
+    //adding info box at top right
+
+            var info = L.control();
+
+            info.onAdd = function (mymap) {
+                this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                this.update();
+                return this._div;
+            };
+
+            //checks if the user is on mobile vs desktop device and changes idle text accordingly
+            //got help from this stackOverflow page (https://stackoverflow.com/questions/55448686/how-can-i-detect-if-a-user-is-on-mobile-and-redirect-them-to-a-mobile-site)
+            var controltext ='';
+
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|OperaMini/i.test(navigator.userAgent) ) {
+                controltext = 'Tap on a state';
+            } else {
+                controltext = 'Hover over a state';
+            }
+
+            //updates the control w/ state-specific information
+            info.update = function (state) {
+                this._div.innerHTML = '<h4>UFO Sightings by State (1400-2021)</h4>' + (state ?
+                    '<b>' + state.name + '</b>: ' + state.sightings + ' sightings'
+                    : controltext);
+            };
+
+            info.addTo(mymap);
+
+    //adding legend at bottom right
+
+            var legend = L.control({position: 'bottomright'});
+
+            legend.onAdd = function (mymap) {
+
+                var div = L.DomUtil.create('div', 'info legend'),
+                    grades = [0, 500, 750, 1000, 2000, 3000, 5000];
+
+                // loop through sightings intervals and generate a label with a colored square for each interval
+                for (var i = 0; i < grades.length; i++) {
+                    div.innerHTML +=
+                        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                }
+
+                return div;
+            };
+
+            legend.addTo(mymap);
+
+    //connecting markers via roads (creating the route)
+    // used stackOverflow page for info on panes (https://gis.stackexchange.com/questions/327817/with-leaflet-routing-machine-how-to-bring-a-route-on-top)
+            
+            var routePane = mymap.createPane('routePane');
+
+            var route = L.Routing.control({
+                waypoints: [inn.getLatLng(), mailbox.getLatLng(), sign.getLatLng(), ranch.getLatLng(),
+                watchtower.getLatLng(), valley.getLatLng(), museum.getLatLng(), lights.getLatLng(), grave.getLatLng()],
+                show: false,
+                waypointMode: 'snap',
+                lineOptions: {
+                    styles: [{pane: 'routePane', color: 'black', opacity: 1, weight: 5}, {pane: 'routePane', color: 'white', opacity: 1, weight: 3}]
+                },
+                createMarker: function() {}
+            }).addTo(mymap);
+
+    /* code to ensure info & legend only show when UFO Sightings layer is visible, routes only show when Roadtrip layer is visible */
+
+            mymap.on({
+                overlayadd: function(e) {
+                    if (e.name == 'UFO Sightings'){
+                        info.addTo(mymap);
+                        legend.addTo(mymap);
+                    }
+                    if (e.name == 'Roadtrip'){
+                        route.addTo(mymap);
+                    }
+                },
+                overlayremove: function(e) {
+                    if (e.name == 'UFO Sightings'){
+                        mymap.removeControl(info);
+                        mymap.removeControl(legend);
+                    }
+                    if (e.name == 'Roadtrip'){
+                        mymap.removeControl(route);
+                    }
+                }
+            });
+            
+        </script>
+    </body>
+</html>
